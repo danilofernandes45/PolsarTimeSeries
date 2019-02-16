@@ -28,6 +28,9 @@ getTimeSerie <- function(file, dim, n, tal){
       init_col <- max_col - (tal - 1)
       max_col <- init_col + (n - 1)
       count = count + 1
+      if(count > x*y){
+         return(serie)
+      }
       
     }
     
