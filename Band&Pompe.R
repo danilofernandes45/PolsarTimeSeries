@@ -1,9 +1,9 @@
 library(ggplot2)
 require(ggthemes)
 
-Bandt.Pompe <- function(series, dimension, delay){
+Bandt.Pompe <- function(elements, dimension, delay, seriesize){
   dyn.load("BandtPompe.so")
-  probability <- .Call("BandtPompe", series, dimension, delay)
+  probability <- .Call("BandtPompe", elements, dimension, delay, seriesize)
   return (probability)
 }
 
