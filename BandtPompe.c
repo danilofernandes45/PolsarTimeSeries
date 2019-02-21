@@ -48,28 +48,31 @@ int equals(int* pattern, int*symbols, int size){
     }
 }
 
-SEXP BandtPompe(SEXP Rseries, SEXP Rdimension, SEXP Rdelay){
+SEXP BandtPompe(SEXP Relements, SEXP Rdimension, SEXP Rdelay, SEXP Rseriesize){
 
-    int i, j, k = 0, dimFat = 1, n, dimension, delay, seriesize;
-    double* series;
+    int i, j, k = 0, dimFat = 1, n, aux = 0, dimension, delay, seriesize;
+    double* elements_aux;
     SEXP Rprobability;
 
-    Rseries = coerceVector(Rseries, REALSXP);
     Rdimension = coerceVector(Rdimension, INTSXP);
     Rdelay = coerceVector(Rdelay, INTSXP);
+    Relements = coerceVector(Relements, REALSXP);
+    Rseriesize = coerceVector(Rseriesize, INTSXP);
 
     dimension = INTEGER(Rdimension)[0];
     delay = INTEGER(Rdelay)[0];
-    seriesize = length(Rseries);
+    seriesize = INTEGER(Rseriesize)[0];
     n = dimension;    
 
-    series = REAL(Rseries);
+    elements_aux = REAL(Relements);
 
     while(1 < n)
     {
         dimFat = n*dimFat;
         n--;
     }
+
+    printf(".\n");
 
     //allocates space for the bidimensional arrays(symbols, elements, patterns)
     int** symbols = (int**) malloc(dimFat * sizeof(int*));
@@ -109,9 +112,10 @@ SEXP BandtPompe(SEXP Rseries, SEXP Rdimension, SEXP Rdelay){
         }
     }
 
-    for(i = 0; i < (seriesize - (dimension - 1)*delay); i += delay){
+    for(i = 0; i < seriesize - ((dimension - 1)*delay); i++){
         for(j = 0; j < dimension; j++){
-            elements[i][j] = series[i + j];
+            elements[i][j] = elements_aux[aux];
+            aux++;
         }
     }
 
