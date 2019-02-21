@@ -72,7 +72,6 @@ SEXP BandtPompe(SEXP Relements, SEXP Rdimension, SEXP Rdelay, SEXP Relementsize)
         n--;
     }
 
-    printf(".\n");
 
     //allocates space for the bidimensional arrays(symbols, elements, patterns)
     int** symbols = (int**) malloc(dimFat * sizeof(int*));
