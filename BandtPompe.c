@@ -118,7 +118,7 @@ SEXP BandtPompe(SEXP Relements, SEXP Rdimension, SEXP Rdelay, SEXP Relementsize)
         }
     }
 
-    for(i = 0; i < elementsize; i += delay){
+    for(i = 0; i < elementsize; i++){
         double* element = elements[i];
         for(j = 1; j <= dimension; j++){
             for(k = 0; k < dimension - 1; k++){
