@@ -48,20 +48,20 @@ int equals(int* pattern, int*symbols, int size){
     }
 }
 
-SEXP BandtPompe(SEXP Relements, SEXP Rdimension, SEXP Rdelay, SEXP Rseriesize){
+SEXP BandtPompe(SEXP Relements, SEXP Rdimension, SEXP Rdelay, SEXP Relementsize){
 
-    int i, j, k = 0, dimFat = 1, n, aux = 0, dimension, delay, seriesize;
+    int i, j, k = 0, dimFat = 1, n, aux = 0, dimension, delay, elementsize;
     double* elements_aux;
     SEXP Rprobability;
 
     Rdimension = coerceVector(Rdimension, INTSXP);
     Rdelay = coerceVector(Rdelay, INTSXP);
     Relements = coerceVector(Relements, REALSXP);
-    Rseriesize = coerceVector(Rseriesize, INTSXP);
+    Relementsize = coerceVector(Relementsize, INTSXP);
 
     dimension = INTEGER(Rdimension)[0];
     delay = INTEGER(Rdelay)[0];
-    seriesize = INTEGER(Rseriesize)[0];
+    elementsize = INTEGER(Relementsize)[0];
     n = dimension;    
 
     elements_aux = REAL(Relements);
@@ -80,9 +80,9 @@ SEXP BandtPompe(SEXP Relements, SEXP Rdimension, SEXP Rdelay, SEXP Rseriesize){
         symbols[i] = (int*) malloc(dimension * sizeof(int));
     }
 
-    int **patterns = (int**) malloc((seriesize - (dimension - 1)*delay) * sizeof(int*));
-    double **elements = (double**) malloc((seriesize - (dimension - 1)*delay) * sizeof(double*));
-    for(i = 0; i < (seriesize - (dimension - 1)*delay); i++){
+    int **patterns = (int**) malloc(elementsize * sizeof(int*));
+    double **elements = (double**) malloc(elementsize * sizeof(double*));
+    for(i = 0; i < elementsize; i++){
         patterns[i] = (int*) malloc(dimension * sizeof(int));
         elements[i] = (double*) malloc(dimension * sizeof(double));
     }
@@ -95,7 +95,7 @@ SEXP BandtPompe(SEXP Relements, SEXP Rdimension, SEXP Rdelay, SEXP Rseriesize){
         initial_pattern[i] = i;
     }
 
-    for(i = 0; i < (seriesize - (dimension - 1)*delay); i++){
+    for(i = 0; i < elementsize; i++){
         for(j = 0; j < dimension; j++){
             patterns[i][j] = initial_pattern[j];
         }
@@ -112,14 +112,14 @@ SEXP BandtPompe(SEXP Relements, SEXP Rdimension, SEXP Rdelay, SEXP Rseriesize){
         }
     }
 
-    for(i = 0; i < seriesize - ((dimension - 1)*delay); i++){
+    for(i = 0; i < elementsize; i++){
         for(j = 0; j < dimension; j++){
             elements[i][j] = elements_aux[aux];
             aux++;
         }
     }
 
-    for(i = 0; i < (seriesize - (dimension - 1)*delay); i += delay){
+    for(i = 0; i < elementsize; i += delay){
         double* element = elements[i];
         for(j = 1; j <= dimension; j++){
             for(k = 0; k < dimension - 1; k++){
@@ -145,7 +145,7 @@ SEXP BandtPompe(SEXP Relements, SEXP Rdimension, SEXP Rdelay, SEXP Rseriesize){
         REAL(Rprobability)[i] = 0;
     }
 
-    for(i = 0; i < seriesize - ((dimension - 1)*delay); i++){
+    for(i = 0; i < elementsize; i++){
         for(j = 0; j < dimFat; j++){
             if(equals(patterns[i], symbols[j], dimension)){
                 REAL(Rprobability)[j]++;
@@ -154,7 +154,7 @@ SEXP BandtPompe(SEXP Relements, SEXP Rdimension, SEXP Rdelay, SEXP Rseriesize){
     }
 
     for(i = 0; i < dimFat; i++){
-        REAL(Rprobability)[i] = REAL(Rprobability)[i]/(seriesize - (dimension - 1)*delay);
+        REAL(Rprobability)[i] = REAL(Rprobability)[i]/elementsize;
     }
 
     UNPROTECT(1);
