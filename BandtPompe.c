@@ -48,19 +48,17 @@ int equals(int* pattern, int*symbols, int size){
     }
 }
 
-SEXP BandtPompe(SEXP Relements, SEXP Rdimension, SEXP Rdelay, SEXP Relementsize){
+SEXP BandtPompe(SEXP Relements, SEXP Rdimension, SEXP Relementsize){
 
-    int i, j, k = 0, dimFat = 1, n, aux = 0, dimension, delay, elementsize;
+    int i, j, k = 0, dimFat = 1, n, aux = 0, dimension, elementsize;
     double* elements_aux;
     SEXP Rprobability;
 
     Rdimension = coerceVector(Rdimension, INTSXP);
-    Rdelay = coerceVector(Rdelay, INTSXP);
     Relements = coerceVector(Relements, REALSXP);
     Relementsize = coerceVector(Relementsize, INTSXP);
 
     dimension = INTEGER(Rdimension)[0];
-    delay = INTEGER(Rdelay)[0];
     elementsize = INTEGER(Relementsize)[0];
     n = dimension;    
 
@@ -71,7 +69,6 @@ SEXP BandtPompe(SEXP Relements, SEXP Rdimension, SEXP Rdelay, SEXP Relementsize)
         dimFat = n*dimFat;
         n--;
     }
-
 
     //allocates space for the bidimensional arrays(symbols, elements, patterns)
     int** symbols = (int**) malloc(dimFat * sizeof(int*));
