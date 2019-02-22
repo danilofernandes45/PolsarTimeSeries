@@ -6,10 +6,16 @@ getTimeSerie <- function(file, dim, n, tal){
   
   nrows <- dim[2]
   ncols <- dim[4]
-  
+  x <- 0
+  y <- 0
   #Empirical numbers
-  x <- 1 + (nrows - n) %/% (n - tal)
-  y <- 1 + (ncols - n) %/% (n - tal)
+  if(n > tal){
+    x <- 1 + (nrows - n) %/% (n - tal)
+    y <- 1 + (ncols - n) %/% (n - tal)
+  } else {
+    x <- nrows %/% tal
+    y <- ncols %/% tal
+  }
   
   serie <- array(0, dim = c(x*y, n, n))
   
@@ -25,19 +31,26 @@ getTimeSerie <- function(file, dim, n, tal){
     while(max_col <= ncols){
       
       serie[count, , ] <- block[init_row:max_row, init_col:max_col]
-      init_col <- max_col - (tal - 1)
+      
+      if(n > tal){
+        init_col <- max_col - (tal - 1)
+      } else {
+        init_col <- max_col + (tal - n + 1)
+      }
       max_col <- init_col + (n - 1)
       count = count + 1
-      if(count > x*y){
-         return(serie)
-      }
       
     }
     
     init_col <- 1
     max_col <- n
     
-    init_row <- max_row - (tal - 1)
+    if(n > tal){
+      init_row <- max_row - (tal - 1)
+    } else {
+      init_row <- max_row + (tal - n + 1)
+    }
+    
     max_row <- init_row + (n - 1)
     
   }
