@@ -14,7 +14,13 @@ getTimeSerie <- function(file, dim, n, tal){
     y <- 1 + (ncols - n) %/% (n - tal)
   } else {
     x <- nrows %/% tal
+    if(nrows %% tal >= n){
+      x <- x+1
+    }
     y <- ncols %/% tal
+    if(ncols %% tal >= n){
+      y <- y + 1
+    }
   }
   
   serie <- array(0, dim = c(x*y, n, n))
