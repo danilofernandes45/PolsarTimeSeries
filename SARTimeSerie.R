@@ -1,4 +1,4 @@
-library(raster)
+require(raster)
 
 getTimeSerie <- function(file, dim, n, tal){
   sar_data <- raster(paste(file, ".grd", sep = ""))
